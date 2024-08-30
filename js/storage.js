@@ -8,7 +8,7 @@ const greenCountE1 = document.querySelector("#total-green");
 const betCountE1 = document.querySelector("#total-apostas");
 const assertividadeE1 = document.querySelector("#assertividade");
 
-// Recuperar os valores salvos no Local Storage ou inicializá-los
+// PEGA OS VALORES DO LOCALSTORAGE
 let totalApostado = parseFloat(localStorage.getItem("totalApostado")) || 0;
 let lucroTotal = parseFloat(localStorage.getItem("lucroTotal")) || 0;
 let redCount = parseInt(localStorage.getItem("redCount")) || 0;
@@ -16,12 +16,12 @@ let greenCount = parseInt(localStorage.getItem("greenCount")) || 0;
 let betCount = parseInt(localStorage.getItem("betCount")) || 0;
 let assert = parseFloat(localStorage.getItem("assert")) || 0;
 
-// Recuperar as apostas do Local Storage
+//PEGA A LISTA DE BETS SALVAS
 let bets = JSON.parse(localStorage.getItem("bets")) || [];
 
-// Função para exibir todas as apostas armazenadas ao carregar a página
+// RENDERIZAR A LISTA SALVA
 function renderBets() {
-  betList.innerHTML = ""; // Limpa a lista antes de renderizar novamente
+  betList.innerHTML = ""; 
   bets.forEach((bet) => {
     const listItem = document.createElement("li");
     listItem.textContent = `Data: ${bet.date} / VA: R$ ${bet.betValue.toFixed(
@@ -32,7 +32,7 @@ function renderBets() {
     betList.appendChild(listItem);
   });
 
-  // Atualizar a exibição dos totais
+  // ATUALIZA OS VALORES 
   totalApostadoEl.textContent = totalApostado.toFixed(2);
   lucroTotalEl.textContent = lucroTotal.toFixed(2);
   redCountE1.textContent = redCount;
@@ -41,9 +41,10 @@ function renderBets() {
   assertividadeE1.textContent = assert.toFixed(1);
 }
 
-// Executa a função para renderizar as apostas salvas quando a página carregar
+// CHAMA A FUNCAO PARA RENDERIZAR
 renderBets();
 
+// ESCUTADOR DE EVENTO PARA ADICIONAR BET NA LISTA E ATT OS VALORES
 betForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
@@ -65,17 +66,17 @@ betForm.addEventListener("submit", function (event) {
 
   assert = (greenCount * 100) / betCount;
 
-  // Cria o objeto da aposta
+  // OBJETO BET PARA MANDAR PRA LISTA
   const bet = { date, betValue, odd, resultado, lucro };
 
-  // Adiciona a nova aposta ao array de apostas
+  // ADICIONA NA LISTA
   bets.push(bet);
 
   // Atualizar os totais antes de salvar
   totalApostado += betValue;
   lucroTotal += lucro;
 
-  // Salva os valores atualizados no Local Storage
+  // SALVA TUDO NO LOCALSTORAGE
   localStorage.setItem("bets", JSON.stringify(bets));
   localStorage.setItem("totalApostado", totalApostado.toFixed(2));
   localStorage.setItem("lucroTotal", lucroTotal.toFixed(2));
@@ -84,7 +85,7 @@ betForm.addEventListener("submit", function (event) {
   localStorage.setItem("betCount", betCount);
   localStorage.setItem("assert", assert.toFixed(1));
 
-  // Renderiza a nova aposta na lista
+  // CRIA NOVA APOSTA NA LISTA VISIVEL
   const listItem = document.createElement("li");
   listItem.textContent = `Data: ${date} / VA: R$ ${betValue.toFixed(
     2
@@ -93,17 +94,18 @@ betForm.addEventListener("submit", function (event) {
   )} / Lucro: R$ ${lucro.toFixed(2)}`;
   betList.appendChild(listItem);
 
-  // Atualizar a exibição dos totais na interface
+  // ATUALIZA TUDO NA TELA
   totalApostadoEl.textContent = totalApostado.toFixed(2);
   lucroTotalEl.textContent = lucroTotal.toFixed(2);
   redCountE1.textContent = redCount;
   greenCountE1.textContent = greenCount;
   betCountE1.textContent = betCount;
   assertividadeE1.textContent = assert.toFixed(1);
-
+  // RESETA O FORM QUANDO CLICAR
   betForm.reset();
 });
 
+// FUNCAO PARA LIMPAR O LOCAL STORAGE E RESETAR TUDO
 limpar.addEventListener("click", function () {
   localStorage.clear();
   bets = [];
